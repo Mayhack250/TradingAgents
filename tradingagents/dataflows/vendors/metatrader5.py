@@ -6,8 +6,8 @@ The MetaTrader5 Python package is an optional Windows-only dependency.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Mapping
+from collections.abc import Mapping
+from datetime import UTC, datetime
 
 from tradingagents.dataflows.forex import normalize_pair
 
@@ -99,7 +99,7 @@ class MetaTrader5ForexProvider:
             )
         rows: list[dict[str, object]] = []
         for rate in rates:
-            stamp = datetime.fromtimestamp(int(rate["time"]), tz=timezone.utc)
+            stamp = datetime.fromtimestamp(int(rate["time"]), tz=UTC)
             rows.append(
                 {
                     "timestamp": stamp.isoformat(),
