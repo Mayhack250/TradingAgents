@@ -1,12 +1,10 @@
 """Tests for the read-only MetaTrader 5 FX adapter."""
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from types import SimpleNamespace
 
 import pytest
 
 from tradingagents.dataflows.vendors.metatrader5 import MetaTrader5ForexProvider
-
-UTC = timezone.utc
 
 
 class FakeMT5:
