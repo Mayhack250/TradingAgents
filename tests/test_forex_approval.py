@@ -1,6 +1,7 @@
 """Tests for the durable semi-automatic FX approval gate."""
 from datetime import datetime, timezone
 from decimal import Decimal
+import sqlite3
 
 import pytest
 
@@ -62,7 +63,7 @@ def test_rejected_proposal_cannot_be_approved_again(tmp_path):
 def test_duplicate_ids_and_unknown_ids_are_rejected(tmp_path):
     store = ForexApprovalStore(tmp_path / "approvals.sqlite3")
     store.submit(make_proposal())
-    with pytest.raises(Exception):
+    with pytest.raises(sqlite3.IntegrityError):
         store.submit(make_proposal())
     with pytest.raises(ValueError, match="does not exist"):
         store.approve("missing", approved_at=NOW)
