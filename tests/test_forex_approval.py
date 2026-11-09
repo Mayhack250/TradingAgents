@@ -1,13 +1,11 @@
 """Tests for the durable semi-automatic FX approval gate."""
-from datetime import datetime, timezone
-from decimal import Decimal
 import sqlite3
+from datetime import UTC, datetime
+from decimal import Decimal
 
 import pytest
 
 from tradingagents.dataflows.forex_approval import ForexApprovalStore, ForexTradeProposal
-
-UTC = timezone.utc
 NOW = datetime(2026, 11, 9, 10, 5, tzinfo=UTC)
 
 
