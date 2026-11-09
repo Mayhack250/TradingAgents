@@ -1,6 +1,6 @@
 """Unit tests for provider-neutral FX market-data normalization."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -19,7 +19,6 @@ from tradingagents.dataflows.forex import (
     validate_m5_series,
 )
 
-UTC = timezone.utc
 
 
 def test_pair_normalization_and_pip_size():
