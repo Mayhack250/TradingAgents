@@ -71,6 +71,8 @@ class ForexApprovalStore:
 
     def __init__(self, database: str | Path) -> None:
         self.database = str(database)
+        if self.database != ":memory:":
+            Path(self.database).parent.mkdir(parents=True, exist_ok=True)
         with self._connect() as connection:
             connection.execute(
                 """
