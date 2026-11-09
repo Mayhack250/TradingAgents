@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -56,9 +56,7 @@ class ForexTradeProposal:
 
     @property
     def reward_to_risk(self) -> Decimal:
-        risk = abs(self.entry - self.stop_loss)
-        reward = abs(self.take_profit - self.entry)
-        return reward / risk
+        return abs(self.take_profit - self.entry) / abs(self.entry - self.stop_loss)
 
 
 @dataclass(frozen=True, slots=True)
