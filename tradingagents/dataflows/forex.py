@@ -6,11 +6,11 @@ Missing observations are surfaced; prices and quotes are never synthesized.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import datetime, timezone
-from decimal import Decimal, InvalidOperation
 import re
-from typing import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from decimal import Decimal, InvalidOperation
 
 M5_SECONDS = 300
 DEFAULT_CANDLE_MAX_AGE_SECONDS = 600
@@ -30,7 +30,7 @@ def _decimal(value: object, field: str) -> Decimal:
 def _utc(value: datetime, field: str = "timestamp") -> datetime:
     if value.tzinfo is None or value.utcoffset() is None:
         raise ValueError(f"{field} must be timezone-aware")
-    return value.astimezone(timezone.utc)
+    return value.astimezone(UTC)
 
 
 def parse_timestamp(value: object, field: str = "timestamp") -> datetime:
@@ -218,7 +218,7 @@ def find_m5_gaps(candles: Iterable[ForexCandle]) -> list[tuple[datetime, datetim
         raise ValueError("all candles must belong to the same FX pair")
     ordered = sorted(items, key=lambda item: item.timestamp)
     gaps = []
-    for previous, current in zip(ordered, ordered[1:]):
+    for previous, current in zip(ordered, ordered[1:], strict=False):
         delta = (current.timestamp - previous.timestamp).total_seconds()
         if delta <= 0:
             raise ValueError("duplicate or out-of-order candle timestamp")
