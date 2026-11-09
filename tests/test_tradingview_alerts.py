@@ -1,4 +1,5 @@
 """Tests for TradingView alert parsing and M5 enforcement."""
+
 import pytest
 
 from tradingagents.dataflows.tradingview import parse_tradingview_alert
