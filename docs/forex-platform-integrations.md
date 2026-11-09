@@ -1,25 +1,24 @@
 # Forex platform integrations
 
-This branch adds a read-only MetaTrader 5 data adapter and a validated
-TradingView alert payload contract. Neither integration places, modifies, or
-closes a broker order.
+This branch adds a read-only MetaTrader 5 data adapter, a validated TradingView
+alert payload contract, and a durable human approval ledger. No component
+currently places, modifies, or closes a broker order.
 
 ## Intended flow
 
-1. MetaTrader 5 is the source of broker-specific closed M5 candles and live
-   bid/ask quotes. The provider reads the terminal's symbol feed, not a
-   TradingView chart's displayed price.
-2. TradingView Pine alerts are an optional second signal channel for chart
-   events such as BOS, CHOCH, liquidity sweeps, equal highs/lows, and
-   supply/demand zones.
+1. MetaTrader 5 supplies broker-specific closed M5 candles and live bid/ask
+   quotes. The provider reads the terminal's symbol feed, not a TradingView
+   chart's displayed price.
+2. TradingView Pine alerts provide optional chart events such as BOS, CHOCH,
+   liquidity sweeps, equal highs/lows, and supply/demand zones.
 3. The FX normalizer validates timestamps, OHLC, pair identity, quote spread,
    freshness, and gaps before data is used downstream.
-4. The research engine reconciles both sources and prepares a trade proposal.
-   The operator reviews and confirms the proposal. Order routing is a separate,
-   disabled-by-default future component.
+4. The research engine can create a structured trade proposal. The SQLite
+   approval ledger stores it as PENDING until the operator explicitly approves
+   or rejects it. Approval is a recorded decision, not a broker order.
 
-M5 is the only execution timeframe. Higher timeframes may be added for context
-and directional bias, never as the source of M5 entry confirmation.
+M5 is the only execution timeframe. Higher timeframes may provide context and
+directional bias, never the source of M5 entry confirmation.
 
 ## MetaTrader 5 setup (Windows)
 
@@ -66,13 +65,13 @@ symbol names differ, so configure symbol_map to match Market Watch exactly.
 
 MT5's Python package communicates with a locally installed terminal and is
 distributed for Windows. The terminal must be open and reachable on the same
-machine. The adapter currently has no remote-terminal or mobile-only mode.
+machine. This adapter has no remote-terminal or mobile-only mode.
 
 ## TradingView alert contract
 
 TradingView sends webhook alerts as HTTP POST requests. A valid JSON message is
 sent with an application/json content type. TradingView requires webhook
-two-factor authentication, accepts HTTPS on ports 443 (or HTTP on 80), and
+two-factor authentication, accepts HTTPS on port 443 (or HTTP on 80), and
 cancels a webhook request if the receiver takes longer than roughly three
 seconds. Delivery can occasionally fail, so monitor the TradingView alert log.
 
@@ -101,40 +100,69 @@ from tradingagents.dataflows.tradingview import parse_tradingview_alert
 alert = parse_tradingview_alert(request_body)
 ```
 
-This commit deliberately provides the strict payload parser, not a publicly
-reachable webhook server. Before connecting TradingView to a running instance,
-deploy an HTTPS receiver with request authentication, a secret stored outside
-source control, request-size limits, rate limiting, duplicate-alert handling,
-durable queueing, and a response under three seconds. Do not put broker
-credentials or API keys in TradingView alert messages. A local-only endpoint
-cannot receive TradingView webhooks without a secure public HTTPS ingress.
+This commit provides the strict payload parser, not a publicly reachable
+webhook server. Before connecting TradingView to a running instance, deploy
+an HTTPS receiver with request authentication, a secret stored outside source
+control, request-size limits, rate limiting, duplicate-alert handling, durable
+queueing, and a response under three seconds. Do not put broker credentials or
+API keys in TradingView alert messages. A local-only endpoint cannot receive
+TradingView webhooks without secure public HTTPS ingress.
 
 TradingView alerts are supporting chart events, not authoritative market
 prices. Reconcile their symbol, timestamp, and event against MT5 data before
-considering a setup. TradingView alert snapshots do not automatically update
-when a Pine script or its inputs change; recreate the alert after modifying
-the script.
+considering a setup. Alert snapshots do not automatically update when a Pine
+script or its inputs change; recreate the alert after modifying the script.
 
-## Semi-automatic execution boundary
+## Semi-automatic proposal approval
 
-Current implementation is intentionally read-only:
-- no order_send call;
-- no account login or password handling;
-- no order, position, or stop modification;
-- no automatic trade on a TradingView alert.
+The durable approval ledger is implemented in
+tradingagents.dataflows.forex_approval. It validates M5 execution timing,
+BUY/SELL stop/entry/target geometry, positive risk inputs, and calculates the
+proposal's reward-to-risk ratio. Proposal IDs are unique; a decision can only
+be made once while a proposal is pending.
 
-The next execution milestone should add a durable proposal/approval queue,
-risk checks, idempotency keys, and an explicit human confirmation action.
-Only after separate testing and explicit authorization should a broker
-execution adapter be considered. Until then, this integration is market-data
-and alert ingestion only.
+Example:
+
+```python
+from datetime import datetime, timezone
+from decimal import Decimal
+
+from tradingagents.dataflows.forex_approval import (
+    ForexApprovalStore,
+    ForexTradeProposal,
+)
+
+store = ForexApprovalStore("data/forex_approvals.sqlite3")
+proposal = ForexTradeProposal(
+    proposal_id="EURUSD-20261109-1005-CHOCH",
+    pair="EURUSD",
+    side="BUY",
+    timeframe_seconds=300,
+    signal_at=datetime.now(timezone.utc),
+    entry=Decimal("1.1000"),
+    stop_loss=Decimal("1.0990"),
+    take_profit=Decimal("1.1030"),
+    risk_percent=Decimal("0.5"),
+    rationale="M5 setup rationale goes here",
+)
+store.submit(proposal)  # PENDING
+# Only after a human reviews the setup:
+store.approve(proposal.proposal_id, approved_at=datetime.now(timezone.utc))
+# Or decline it:
+# store.reject(proposal.proposal_id, rejected_at=datetime.now(timezone.utc))
+```
+
+Approval does not execute the trade. Broker order routing remains deliberately
+absent until a separate implementation, explicit authorization, and live/demo
+safety tests are completed. No MT5 order_send call exists in this integration.
 
 ## Validation
 
-The new tests use fake MT5 terminal objects and synthetic TradingView payloads;
-they do not require a broker login or TradingView account. Run:
+Tests use fake MT5 terminal objects, synthetic TradingView payloads, and
+temporary SQLite databases. They do not require a broker login or TradingView
+account. Run:
 
 ```powershell
-pytest -q tests/test_forex_data.py tests/test_forex_provider.py tests/test_metatrader5_provider.py tests/test_tradingview_alerts.py
-ruff check tradingagents/dataflows/forex.py tradingagents/dataflows/vendors/forex.py tradingagents/dataflows/vendors/metatrader5.py tradingagents/dataflows/tradingview.py tests/test_forex_data.py tests/test_forex_provider.py tests/test_metatrader5_provider.py tests/test_tradingview_alerts.py
+pytest -q tests/test_forex_data.py tests/test_forex_provider.py tests/test_metatrader5_provider.py tests/test_tradingview_alerts.py tests/test_forex_approval.py
+ruff check tradingagents/dataflows/forex.py tradingagents/dataflows/vendors/forex.py tradingagents/dataflows/vendors/metatrader5.py tradingagents/dataflows/tradingview.py tradingagents/dataflows/forex_approval.py tests/test_forex_data.py tests/test_forex_provider.py tests/test_metatrader5_provider.py tests/test_tradingview_alerts.py tests/test_forex_approval.py
 ```
