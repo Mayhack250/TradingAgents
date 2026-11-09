@@ -6,9 +6,10 @@ flags so vendor payloads cannot bypass the same checks.
 """
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Mapping, Protocol, Sequence
+from typing import Protocol
 
 from tradingagents.dataflows.forex import (
     DEFAULT_CANDLE_MAX_AGE_SECONDS,
