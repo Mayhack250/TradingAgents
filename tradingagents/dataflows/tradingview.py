@@ -9,8 +9,8 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from datetime import datetime
+from collections.abc import Mapping
 from decimal import Decimal, InvalidOperation
-from typing import Mapping
 
 from tradingagents.dataflows.forex import M5_SECONDS, normalize_pair, parse_timestamp
 
