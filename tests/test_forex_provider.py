@@ -1,6 +1,7 @@
 """Tests for the vendor-neutral FX provider adapter."""
 
 from datetime import UTC, datetime
+from decimal import Decimal
 
 import pytest
 
@@ -55,7 +56,7 @@ def test_snapshot_normalizes_explicit_bid_ask_quote():
     )
     snapshot = load_forex_snapshot(provider, "EURUSD", as_of=AS_OF)
     assert snapshot.quote is not None
-    assert str(snapshot.quote.spread_pips) == "1"
+    assert snapshot.quote.spread_pips == Decimal("1")
     assert snapshot.quality.quote_fresh is True
 
 
