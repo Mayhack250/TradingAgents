@@ -1,12 +1,10 @@
 """Tests for the vendor-neutral FX provider adapter."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
 from tradingagents.dataflows.vendors.forex import load_forex_snapshot
-
-UTC = timezone.utc
 AS_OF = datetime(2026, 11, 9, 10, 5, tzinfo=UTC)
 
 
