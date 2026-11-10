@@ -1,4 +1,4 @@
-"""Research Manager: turns the bull/bear debate into a structured investment plan for the trader."""
+"""Research Manager: synthesizes the bull/bear debate into an evidence-weighted equity research assessment."""
 
 from __future__ import annotations
 
@@ -20,20 +20,20 @@ def create_research_manager(llm):
 
         investment_debate_state = state["investment_debate_state"]
 
-        prompt = f"""As the Research Manager and debate facilitator, your role is to critically evaluate this round of debate and deliver a clear, actionable investment plan for the trader.
+        prompt = f"""As the Research Manager, synthesize the debate into a balanced, decision-useful equity research assessment. This is a research conclusion, not a trading instruction. Evaluate the business and the evidence, not a hypothetical portfolio or a trade setup.
 
 {instrument_context}
 
 ---
 
 **Rating Scale** (use exactly one):
-- **Buy**: Strong conviction in the bull thesis; recommend taking or growing the position
-- **Overweight**: Constructive view; recommend gradually increasing exposure
-- **Hold**: Balanced view; recommend maintaining the current position
-- **Underweight**: Cautious view; recommend trimming exposure
-- **Sell**: Strong conviction in the bear thesis; recommend exiting or avoiding the position
+- **Buy**: The evidence supports a strongly attractive long-term business and investment thesis; this is an analytical rating, not an order
+- **Overweight**: The thesis is constructive, with identifiable but manageable uncertainties
+- **Hold**: Evidence is mixed, valuation-sensitive, or insufficient for a stronger conclusion
+- **Underweight**: Material concerns weaken the thesis or make the risk/reward unattractive
+- **Sell**: The evidence indicates a structurally weak or materially impaired thesis
 
-The debate always contains conflicting arguments; deciding which side is stronger is the job, so conflict alone is not a reason to Hold. Commit to the side with the stronger case, sized by how decisively it wins. Choose Hold only when the evidence is still balanced after that weighing, or too thin to support a call; do not manufacture a direction to appear decisive. Weigh the bull and bear cases on their merits, independent of which side spoke first or last.
+Do not confuse confidence with certainty. Weigh the strongest bull and bear evidence independently of speaking order. Separate business quality from valuation: an excellent company can be an unattractive investment at an excessive price. Identify the key assumptions behind the conclusion, the evidence gaps, the most important thesis breakers, and the facts that would change the rating. If the evidence is too thin, say so rather than manufacturing conviction. Do not invent valuation data or financial metrics.
 
 ---
 
@@ -46,7 +46,7 @@ Write these sections, in this order, starting with the recommendation on its own
 
 - **Recommendation**: exactly one of Buy / Overweight / Hold / Underweight / Sell
 - **Rationale**: which arguments decided it
-- **Strategic Actions**: concrete steps for the trader, sized against a standard allocation
+- **Strategic Actions**: prioritized next research steps, diligence questions, monitoring items, and evidence needed to confirm or invalidate the thesis. Do not provide trade execution, entry, stop, or position-sizing instructions.
 
 {NO_EXTERNAL_TOOLS}""" + get_language_instruction()
 
