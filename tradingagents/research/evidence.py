@@ -64,8 +64,7 @@ class EvidenceRecord:
         accessed_at = _aware_utc(self.accessed_at, "accessed_at")
         if self.published_at and self.published_at > accessed_at.date():
             raise ValueError("published_at cannot be after accessed_at")
-        if self.filing_period_end and self.published_at:
-            if self.filing_period_end > self.published_at:
+        if self.filing_period_end and self.published_at and self.filing_period_end > self.published_at:
                 raise ValueError("filing_period_end cannot be after published_at")
         if self.stance not in {"supports", "contradicts", "context"}:
             raise ValueError("stance must be supports, contradicts, or context")
