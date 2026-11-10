@@ -1,0 +1,55 @@
+name: Forex integration checks
+
+on:
+  push:
+    branches: [feat/forex-intelligence-foundation]
+  pull_request:
+    paths:
+      - "tradingagents/dataflows/forex.py"
+      - "tradingagents/dataflows/forex_approval.py"
+      - "tradingagents/dataflows/tradingview.py"
+      - "tradingagents/dataflows/vendors/forex.py"
+      - "tradingagents/dataflows/vendors/metatrader5.py"
+      - "tests/test_forex_*.py"
+      - "tests/test_metatrader5_provider.py"
+      - "tests/test_tradingview_alerts.py"
+      - ".github/workflows/forex-integration.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: forex-integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  forex-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install project and test dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Run FX integration tests
+        run: >
+          python -m pytest -q
+          tests/test_forex_data.py
+          tests/test_forex_provider.py
+          tests/test_metatrader5_provider.py
+          tests/test_tradingview_alerts.py
+          tests/test_forex_approval.py
+      - name: Lint FX integration
+        run: >
+          ruff check
+          tradingagents/dataflows/forex.py
+          tradingagents/dataflows/forex_approval.py
+          tradingagents/dataflows/tradingview.py
+          tradingagents/dataflows/vendors/forex.py
+          tradingagents/dataflows/vendors/metatrader5.py
+          tests/test_forex_data.py
+          tests/test_forex_provider.py
+          tests/test_metatrader5_provider.py
+          tests/test_tradingview_alerts.py
+          tests/test_forex_approval.py
