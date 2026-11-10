@@ -4,7 +4,6 @@ import pytest
 
 from tradingagents.dataflows.tradingview import parse_tradingview_alert
 
-
 VALID = {
     "alert_id": "eurusd-m5-001",
     "pair": "EUR/USD",
