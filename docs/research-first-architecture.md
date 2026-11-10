@@ -99,3 +99,20 @@ SEC EDGAR company-facts data is useful for US issuer filings, while FRED supplie
 ## Future virtual portfolio boundary
 
 When introduced, the virtual portfolio should be a separate simulation service with its own ledger, cash accounting, corporate-action handling, transaction costs, benchmark, and performance methodology. It should support paper transactions only and never share code paths with live broker order routing by default.
+
+
+## Implementation status on the feature branch
+
+The following groundwork is present:
+
+- `tradingagents/research/evidence.py` defines source metadata, publication/access dates, claim stance, duplicate protection, and as-of eligibility. Focused tests exist in `tests/test_research_evidence.py`.
+- The stock fundamentals analyst, bull researcher, bear researcher, and research manager have been reframed toward deeper business diligence, thesis stress-testing, and research follow-ups.
+- Existing SEC EDGAR, FRED, Yahoo Finance, report-generation, and multi-agent components remain available for reuse.
+
+The following work is **not yet complete** and must not be represented as already operational:
+
+- The evidence register is not yet wired end-to-end into analyst tool results and the final report's source register.
+- The default graph still continues from Research Manager into Trader, risk debate, and Portfolio Manager. A dedicated research-only graph/CLI path must be implemented and tested before this fork can be called research-only in operation.
+- Company/industry coverage, valuation scenarios, source reconciliation, and report completeness still need deeper implementation and validation.
+
+The immediate engineering sequence is: (1) create and test a graph path that ends after research synthesis; (2) attach evidence records to source retrieval and report output; (3) add company/peer/valuation research depth; (4) add point-in-time and numerical-consistency regression tests. Personal virtual-portfolio work remains deferred.
