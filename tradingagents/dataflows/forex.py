@@ -240,7 +240,7 @@ def validate_m5_series(
     if any(item.pair != pair for item in items):
         raise ValueError("all candles must belong to the same FX pair")
     ordered = sorted(items, key=lambda item: item.timestamp)
-    for previous, current in zip(ordered, ordered[1:]):
+    for previous, current in zip(ordered, ordered[1:], strict=False):
         delta = (current.timestamp - previous.timestamp).total_seconds()
         if delta <= 0:
             raise ValueError("duplicate candle timestamp")
