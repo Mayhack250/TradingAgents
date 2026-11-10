@@ -7,7 +7,7 @@ The MetaTrader5 Python package is an optional Windows-only dependency.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timezone
 
 from tradingagents.dataflows.forex import normalize_pair
 
