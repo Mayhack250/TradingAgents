@@ -4,6 +4,17 @@
 
 # TradingAgents: Multi-Agents LLM Financial Trading Framework
 
+
+## Mayhack250 fork direction: research first
+
+This fork is currently prioritizing **deep public-equity research**, not live trading or broker automation. The near-term goal is to produce rigorous, source-backed company and industry research: business models, financial quality, competitive position, management, valuation, macro exposure, catalysts, risks, and balanced bull/base/bear theses.
+
+The existing multi-agent research and debate architecture is the foundation. Current work will focus on evidence quality, primary-source coverage, point-in-time integrity, reproducible assumptions, and clear disclosure of missing or conflicting data. US-listed equities are the initial priority, while international ticker support is retained where source coverage is reliable.
+
+A personal virtual portfolio is **deferred to a later phase**. No personal holdings or allocation assumptions will be initialized now. Live execution and unattended trading are outside the current scope. Existing forex groundwork on the feature branch is retained but is not the active priority.
+
+See [the equity research-first direction and roadmap](docs/equity-research-charter.md).
+
 <div align="center" style="line-height: 1;">
   <a href="https://arxiv.org/abs/2412.20138" target="_blank"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2412.20138-B31B1B?logo=arxiv"/></a>
   <a href="https://discord.com/invite/hk9PGKShPK" target="_blank"><img alt="Discord" src="https://img.shields.io/badge/Discord-TradingResearch-7289da?logo=discord&logoColor=white&color=7289da"/></a>
