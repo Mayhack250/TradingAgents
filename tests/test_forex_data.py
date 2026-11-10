@@ -20,7 +20,6 @@ from tradingagents.dataflows.forex import (
 )
 
 
-
 def test_pair_normalization_and_pip_size():
     assert normalize_pair("eur/usd") == "EURUSD"
     assert normalize_pair("GBP_USD") == "GBPUSD"
