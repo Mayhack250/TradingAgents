@@ -27,6 +27,6 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install test runner
-        run: python -m pip install --upgrade pip pytest
+        run: python -m pip install --upgrade pip pytest python-dotenv
       - name: Run FX data tests
         run: python -m pytest tests/test_forex_data.py tests/test_forex_provider.py -q
