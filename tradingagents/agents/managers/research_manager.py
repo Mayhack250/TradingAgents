@@ -33,7 +33,7 @@ def create_research_manager(llm):
 - **Underweight**: Material concerns weaken the thesis or make the risk/reward unattractive
 - **Sell**: The evidence indicates a structurally weak or materially impaired thesis
 
-Do not confuse confidence with certainty. Weigh the strongest bull and bear evidence independently of speaking order. Separate business quality from valuation: an excellent company can be an unattractive investment at an excessive price. Identify the key assumptions behind the conclusion, the evidence gaps, the most important thesis breakers, and the facts that would change the rating. If the evidence is too thin, say so rather than manufacturing conviction. Do not invent valuation data or financial metrics.
+Do not confuse confidence with certainty. Remember that conflict alone is not a reason to Hold. Weigh the strongest bull and bear evidence independently of speaking order. Separate business quality from valuation: an excellent company can be an unattractive investment at an excessive price. Identify the key assumptions behind the conclusion, the evidence gaps, the most important thesis breakers, and the facts that would change the rating. If the evidence is too thin, say so rather than manufacturing conviction. Do not invent valuation data or financial metrics.
 
 ---
 
