@@ -93,36 +93,35 @@ class TraderAction(StrEnum):
 
 
 class ResearchPlan(BaseModel):
-    """Structured investment plan produced by the Research Manager.
+    """Evidence-weighted equity research assessment produced by the Research Manager.
 
-    Hand-off to the Trader: the recommendation pins the directional view,
-    the rationale captures which side of the bull/bear debate carried the
-    argument, and the strategic actions translate that into concrete
-    instructions the trader can execute against.
+    The recommendation is an analytical stance, not an order. The rationale
+    records the strongest evidence on both sides, while strategic actions
+    identify further diligence and monitoring work rather than trade execution.
     """
 
     recommendation: PortfolioRating = Field(
         description=(
-            "The investment recommendation. Exactly one of Buy / Overweight / "
-            "Hold / Underweight / Sell. Conflicting arguments alone are not a "
-            "reason to Hold: commit to the stronger side, sized by how "
-            "decisively it wins. Choose Hold only when the evidence is still "
-            "balanced after weighing, or too thin to support a call."
+            "An evidence-weighted equity research stance: Buy / Overweight / Hold / "
+            "Underweight / Sell. This is an analytical assessment of the business "
+            "and investment thesis, not an instruction to execute a trade or size "
+            "a position. Distinguish business quality from valuation and choose "
+            "Hold when evidence is mixed or insufficient."
         ),
     )
     rationale: str = Field(
         description=(
-            "Conversational summary of the key points from both sides of the "
-            "debate, ending with which arguments led to the recommendation. "
-            "Speak naturally, as if to a teammate."
+            "Evidence-led synthesis of the strongest bull and bear arguments, the "
+            "assumptions that matter most, how business quality differs from "
+            "valuation, and which facts determined the research stance. Clearly "
+            "identify unresolved uncertainty."
         ),
     )
     strategic_actions: str = Field(
         description=(
-            "Concrete steps for the trader to implement the recommendation, "
-            "including sizing guidance relative to a standard allocation. The "
-            "research team does not see the caller's holdings; the trader and "
-            "portfolio manager apply the actual position."
+            "Prioritized research follow-ups, diligence questions, monitoring items, "
+            "and evidence needed to confirm or invalidate the thesis. Do not "
+            "provide trade execution, entry, stop, or position-sizing instructions."
         ),
     )
 
