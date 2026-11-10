@@ -6,6 +6,7 @@ from decimal import Decimal
 import pytest
 
 from tradingagents.dataflows.forex_approval import ForexApprovalStore, ForexTradeProposal
+
 NOW = datetime(2026, 11, 9, 10, 5, tzinfo=UTC)
 
 
