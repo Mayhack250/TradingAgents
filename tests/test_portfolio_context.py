@@ -232,14 +232,14 @@ def test_completed_run_clears_the_checkpoint_it_wrote(tmp_path, monkeypatch):
 
 
 @pytest.mark.unit
-def test_research_layer_sizes_against_a_standard_allocation():
-    """The research team is blind to the book, so its plan cannot promise
-    position-relative sizing: it sizes against a standard allocation instead."""
+def test_research_layer_does_not_give_position_sizing_instructions():
+    """The research-first layer produces diligence tasks, not allocation advice."""
     from tradingagents.agents.schemas import ResearchPlan
 
     description = ResearchPlan.model_fields["strategic_actions"].description
-    assert "standard allocation" in description
-    assert "does not see the caller's holdings" in description
+    assert "research follow-ups" in description
+    assert "Do not provide trade execution" in description
+    assert "position-sizing instructions" in description
 
 
 @pytest.mark.unit
