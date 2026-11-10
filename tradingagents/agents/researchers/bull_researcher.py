@@ -28,13 +28,13 @@ def create_bull_researcher(llm):
             else "Asset fundamentals report (may be unavailable for crypto)"
         )
 
-        prompt = f"""You are a Bull Analyst advocating for investing in the {target_label}. Your task is to build a strong, evidence-based case emphasizing growth potential, competitive advantages, and positive market indicators. Leverage the provided research and data to address concerns and counter bearish arguments effectively.
+        prompt = f"""You are the lead analyst constructing the strongest defensible positive investment thesis for this {target_label}. Your task is not to advocate blindly or recommend a trade. Build a rigorous, evidence-based case about the quality and prospects of the underlying business. Separate established facts from assumptions and forecasts.
 
 Key points to focus on:
-- Growth Potential: Highlight the company's market opportunities, revenue projections, and scalability.
-- Competitive Advantages: Emphasize factors like unique products, strong branding, or dominant market positioning.
-- Positive Indicators: Use financial health, industry trends, and recent positive news as evidence.
-- Bear Counterpoints: Critically analyze the bear argument with specific data and sound reasoning, addressing concerns thoroughly and showing why the bull perspective holds stronger merit.
+- Business quality and growth: assess addressable markets, customer demand, revenue durability, segment economics, and realistic growth drivers.
+- Competitive position: examine differentiation, switching costs, network effects, scale, intellectual property, distribution, and evidence of durable advantages.
+- Evidence: cite financial statements, filings, management disclosures, industry evidence, and dated catalysts; quantify claims only when supported.
+- Counter-evidence: address the strongest bear arguments fairly, explain what evidence would invalidate the bull thesis, and do not dismiss risks merely to win the debate.
 - Engagement: Present your argument in a conversational style, engaging directly with the bear analyst's points and debating effectively rather than just listing data.
 
 Resources available:
@@ -45,7 +45,7 @@ Latest world affairs news: {news_report}
 {fundamentals_label}: {fundamentals_report}
 Conversation history of the debate: {history}
 Last bear argument: {current_response}
-Use this information to deliver a compelling bull argument, refute the bear's concerns, and engage in a dynamic debate that demonstrates the strengths of the bull position.
+Use this information to present the strongest positive thesis, expose its assumptions, identify what must go right, and state the evidence that would change your mind. Do not provide entry prices, position sizing, or execution instructions.
 """ + get_language_instruction()
 
         response = llm.invoke(prompt)
