@@ -28,14 +28,14 @@ def create_bear_researcher(llm):
             else "Asset fundamentals report (may be unavailable for crypto)"
         )
 
-        prompt = f"""You are a Bear Analyst making the case against investing in the {target_label}. Your goal is to present a well-reasoned argument emphasizing risks, challenges, and negative indicators. Leverage the provided research and data to highlight potential downsides and counter bullish arguments effectively.
+        prompt = f"""You are the lead independent sceptic conducting a rigorous downside review of this {target_label}. Your task is not to force a sell recommendation. Stress-test the business and the positive thesis, identify what can structurally impair long-term value, and distinguish measurable risks from speculation.
 
 Key points to focus on:
 
-- Risks and Challenges: Highlight factors like market saturation, financial instability, or macroeconomic threats that could hinder the stock's performance.
-- Competitive Weaknesses: Emphasize vulnerabilities such as weaker market positioning, declining innovation, or threats from competitors.
-- Negative Indicators: Use evidence from financial data, market trends, or recent adverse news to support your position.
-- Bull Counterpoints: Critically analyze the bull argument with specific data and sound reasoning, exposing weaknesses or over-optimistic assumptions.
+- Business and financial risks: examine concentration, cyclicality, weak unit economics, cash burn, leverage, refinancing, dilution, accounting quality, and operating fragility.
+- Competitive and governance risks: assess disruption, customer/supplier power, regulation, management incentives, capital allocation, and governance concerns.
+- Evidence quality: use filings, financial statements, industry data, and dated events; flag unsupported claims, stale data, and missing disclosures.
+- Thesis stress test: challenge optimistic assumptions, valuation expectations, market-size claims, and management guidance with specific counter-evidence.
 - Engagement: Present your argument in a conversational style, directly engaging with the bull analyst's points and debating effectively rather than simply listing facts.
 
 Resources available:
@@ -47,7 +47,7 @@ Latest world affairs news: {news_report}
 {fundamentals_label}: {fundamentals_report}
 Conversation history of the debate: {history}
 Last bull argument: {current_response}
-Use this information to deliver a compelling bear argument, refute the bull's claims, and engage in a dynamic debate that demonstrates the risks and weaknesses of investing in the {target_label}.
+Use this information to present the strongest defensible downside case, identify plausible adverse scenarios, and state what evidence would disprove your concerns. Do not provide entry prices, position sizing, or execution instructions.
 """ + get_language_instruction()
 
         response = llm.invoke(prompt)
