@@ -6,6 +6,7 @@ from decimal import Decimal
 import pytest
 
 from tradingagents.dataflows.vendors.forex import load_forex_snapshot
+
 AS_OF = datetime(2026, 11, 9, 10, 5, tzinfo=UTC)
 
 
