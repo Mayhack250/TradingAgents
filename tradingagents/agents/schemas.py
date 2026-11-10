@@ -105,8 +105,9 @@ class ResearchPlan(BaseModel):
             "An evidence-weighted equity research stance: Buy / Overweight / Hold / "
             "Underweight / Sell. This is an analytical assessment of the business "
             "and investment thesis, not an instruction to execute a trade or size "
-            "a position. Distinguish business quality from valuation and choose "
-            "Hold when evidence is mixed or insufficient."
+            "a position. Conflict alone is not a reason to Hold; distinguish "
+            "business quality from valuation and choose Hold when evidence is "
+            "mixed or insufficient."
         ),
     )
     rationale: str = Field(
